@@ -5,79 +5,64 @@
  */
 package com.quique.alarma;
 
-import javax.swing.JLabel;
+import com.quique.sonido.Sonido;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  *
  * @author quique
+ * 
+ * @param horas son las horas del Date()
+ * @param minutos son los minutos del Date()
+ * @param segundos son los segundos del Date()
+ * 
  */
-public class Reloj extends JLabel implements Runnable {
+public class Reloj {
 
-    private int minutos, segundos;
-    JLabel oo = new JLabel();
+    Timer timer;
+    private int horas, minutos, segundos;
+    public static String hms;
+    Alarma alrm = new Alarma();
 
-    public void reloje() {
+    public Reloj() {
 
-        for (int i = 0; i < 1000000; i++) {
-            try {
+        timer = new Timer();
 
-                segundos++;
+        timer.schedule(new TicTac(), 0, 1000);
+    }
 
-                Thread.sleep(1000);
+    public class TicTac extends TimerTask {
 
-                if (segundos >= 59) {
+        /**
+         * Método que se ejecuta cuando lanzamos la tarea con el Timer Es un
+         * método definido en la clase TimerTask que sobrescribimos
+         */
+        @Override
+        public void run() {
+            
+            //Creamos un objeto de tipo date para sacar la hora del sistema
+            
+            //a cada variable le damos el valor correspondiente del tiempo del sistema
 
-                    segundos = 0;
-                    minutos++;
-                }
+            Date date = new Date();
+            horas = date.getHours();
+            minutos = date.getMinutes();
+            segundos = date.getSeconds();
 
-                if (minutos >= 59) {
-                    minutos = 0;
-                }
-                
-            } catch (InterruptedException ex) {
-                System.out.println("Error " + ex);
+            //Añadimos todo a un string
+            
+            hms = horas + ":" + minutos + ":" + segundos;
+            
+            //Al jtextfield del display le pasamos la hora para que se actualice cada segundo
+            Display.textoHora.setText(Reloj.hms);
+
+            //Si la hora es igual a la alarma que le introducimos que reproduzca el sonido
+            if (hms.contains(alrm.getHmsa())) {
+                Sonido.ReproducirSonido("C:\\Users\\quique\\Documents\\NetBeansProjects\\PruebaBomba\\src\\pruebabomba\\cumbia.wav");
             }
         }
-
-    }
-
-    public int getMinutos() {
-        return minutos;
-    }
-
-    public int getSegundos() {
-        return segundos;
-    }
-
-
-    @Override
-    public void run() {
-
-        for (int i = 0; i < 1000000; i++) {
-            try {
-
-                segundos++;
-
-                Thread.sleep(1000);
-
-                if (segundos >= 59) {
-
-                    segundos = 0;
-                    minutos++;
-                }
-
-                if (minutos >= 59) {
-                    minutos = 0;
-                }
-                
-            } catch (InterruptedException ex) {
-                System.out.println("Error " + ex);
-            }
-        }
-        
-        
-        
     }
 
 }

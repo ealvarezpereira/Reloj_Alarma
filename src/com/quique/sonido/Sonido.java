@@ -19,12 +19,20 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 public class Sonido {
 
-    Clip clip;
-    
-    public void ReproducirSonido(String nombreSonido) {
+    /**
+     * @param clip Crea un nuevo clip
+     *
+     * @method ReproducirSonido le pasamos la url del archivo de sonido y abre
+     * el clip
+     *
+     * @method pararSonido lo que hace es parar el clip cuando le das al boton
+     */
+    public static Clip clip;
+
+    public static void ReproducirSonido(String nombreSonido) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(nombreSonido).getAbsoluteFile());
-             clip = AudioSystem.getClip();
+            clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
 
@@ -34,10 +42,11 @@ public class Sonido {
 
     }
 
-    public void pararSonido(boolean stop) {
-        
-        if (stop == false)
-        clip.stop();
+    public static void pararSonido(boolean parado) {
+
+        if (parado == true) {
+            clip.stop();
+        }
     }
 
 }
